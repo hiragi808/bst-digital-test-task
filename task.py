@@ -7,7 +7,8 @@ TEXT = "Во глубине сибирских руд Храните гордо�
 
 def evaluate_stock(stock: dict, word_counters: list[Counter]) -> int:
     """Считает суммарную прибыль для заданного склада."""
-    storage_cost = sum(stock.values()) # 1 рубль за каждую букву
+    days = len(word_counters)
+    storage_cost = sum(stock.values())*days # 1 рубль за каждую букву
     gross_profit = 0
 
     for wc in word_counters:
