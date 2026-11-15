@@ -1,29 +1,31 @@
 import re
 from collections import Counter
 import random
-
+random.seed(42) 
 # Исходный текст
 TEXT = "Во глубине сибирских руд Храните гордое терпенье, Не пропадет ваш скорбный труд И дум высокое стремленье."
-
+PRICE_PER_WORD = 40
+EXPRESS_DELIVERY_COST = 2
+PENALTY_MISSING_WORDS = 10
+STORAGE_COST_PER_LETTER = 1
 def evaluate_stock(stock: dict, word_counters: list[Counter]) -> int:
     """Считает суммарную прибыль для заданного склада."""
     days = len(word_counters)
-    storage_cost = sum(stock.values())*days # 1 рубль за каждую букву
+    storage_cost = sum(stock.values()) * days * STORAGE_COST_PER_LETTER
+    
     gross_profit = 0
 
     for wc in word_counters:
-        # Считаем, сколько букв не хватает
         deficit = sum(max(0, count - stock.get(letter, 0)) for letter, count in wc.items())
-        
         if deficit == 0:
-            gross_profit += 40
+            gross_profit += PRICE_PER_WORD
         elif deficit == 1:
-            gross_profit += 38
+            gross_profit += (PRICE_PER_WORD - EXPRESS_DELIVERY_COST)
         else:
-            gross_profit -= 10
+            gross_profit -= PENALTY_MISSING_WORDS
 
     return gross_profit - storage_cost
-def optimize_stock(word_counters: list[Counter], letters: list[str], max_need: dict, iterations=100) -> dict:
+def optimize_stock(word_counters: list[Counter], letters: list[str], max_need: dict, iterations=500) -> dict:
     """Ищет оптимальный склад методом локального поиска."""
     best_stock = {}
     best_profit = float('-inf')
