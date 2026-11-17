@@ -88,4 +88,6 @@ def main():
     print("="*40)
 
 if __name__ == "__main__":
-    main()
+    if len(TEXT) != 0:
+       main()
+    else: print("Пучсте четверостишие")
